@@ -1,0 +1,50 @@
+Criando a imagem:
+criei o dockerfile
+
+* docker build -t mysql-image .
+
+-t => tag, nomeando a imagem
+-f => especifica onde está o docker file, se está aqui não precisa
+. => ao final irá indicar que o contexto é na pasta atual
+
+* docker image ls
+comando que mostra as imagens disponíveis
+
+* docker run -d --rm --name mysql-container mysql-image
+
+-d => detach, não trava o console e vai pra background
+--rm => se já existe remove e recria
+--name => um nome para ele
+mysql-image => a imagem que o irá se basear container
+
+* docker ps
+mostra os containers rodando
+
+criei o data.sql
+
+* docker exec -i mysql-container mysql -uroot -psenhadeteste < data.sql
+
+-i => interativo
+mysql-container => container onde vamos executar
+depois vem o comando
+< data.sql => trazendo os comando do arquivo
+
+aqui executou, criou as tabelas
+
+* docker exec -it mysql-container /bin/bash
+-it => manter o terminal aberto
+/bin/bash => console
+
+* docker stop mysql-container
+parar o container
+
+até aqui perdiamos os dados ao reiniciar, agora com o parametro -v de volume compartilho com o host um volume
+* docker run -d -v $(pwd)/api/db/data:/var/lib/mysql --rm --name mysql-container mysql-image
+
+$(pwd) => diretório atual
+caminho fisico : caminho container
+
+Executando um select por fora:
+* docker exec -i mysql-container mysql -uroot -psenhadeteste lista -e "select * from products"
+
+docker stop php-container && docker stop node-container && docker stop mysql-container
